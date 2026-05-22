@@ -1,0 +1,279 @@
+:root {
+    --bg-dark: #050a14;
+    --panel-bg: #0e1525;
+    --cyan: #00f3ff;
+    --red: #ff2a2a;
+    --text-dim: #64748b;
+    --font: 'Share Tech Mono', monospace;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: white;
+    font-family: var(--font);
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* --- Dashboard Layout --- */
+.dashboard {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* Left Side (Video) */
+.video-section {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: relative;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 10px;
+}
+
+.logo { font-size: 1.5rem; letter-spacing: 2px; }
+.cyan { color: var(--cyan); }
+.status { color: var(--text-dim); }
+
+.video-container {
+    flex: 1;
+    background: black;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scaleX(-1);
+}
+
+.overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(5, 10, 20, 0.9);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-dim); letter-spacing: 4px;
+}
+
+/* Right Side (Controls) */
+.control-panel {
+    flex: 1;
+    background: var(--panel-bg);
+    border-left: 1px solid #1e293b;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+}
+
+.panel-box {
+    background: rgba(255,255,255,0.03);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.label {
+    color: var(--cyan);
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+/* Prediction Text */
+.char-display {
+    font-size: 6rem;
+    text-align: center;
+    color: #334155;
+    transition: color 0.2s, text-shadow 0.2s;
+}
+
+.char-display.active {
+    color: white;
+    text-shadow: 0 0 30px var(--cyan);
+}
+
+/* Confidence Bar */
+.progress-bg {
+    width: 100%;
+    height: 10px;
+    background: #1e293b;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--cyan);
+    width: 0%;
+    transition: width 0.3s ease-out;
+    box-shadow: 0 0 10px var(--cyan);
+}
+
+.conf-text { text-align: right; font-size: 0.8rem; color: var(--text-dim); }
+
+/* Buttons */
+.bottom-controls { margin-top: auto; display: flex; flex-direction: column; gap: 15px; }
+
+.btn {
+    padding: 15px;
+    font-family: var(--font);
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.btn-start {
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+}
+.btn-start:hover:enabled { background: var(--cyan); color: black; box-shadow: 0 0 20px var(--cyan); }
+
+.btn-stop {
+    background: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+    opacity: 0.5;
+}
+.btn-stop:enabled { opacity: 1; }
+.btn-stop:enabled:hover { background: var(--red); color: white; }
+
+/* NEW: Help Button */
+.btn-help {
+    background: transparent;
+    border: 1px solid var(--text-dim);
+    color: var(--text-dim);
+    font-size: 0.9rem;
+}
+.btn-help:hover {
+    border-color: white;
+    color: white;
+    box-shadow: 0 0 15px rgba(255,255,255,0.2);
+}
+
+/* Toggle Switch */
+.toggle-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+.switch { position: relative; width: 40px; height: 20px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #333; transition: .4s; }
+input:checked + .slider { background: var(--cyan); }
+
+/* --- MODAL STYLES --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(5, 10, 20, 0.95);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--panel-bg);
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid var(--cyan);
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+    position: relative;
+}
+
+.terminal-border:before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    background: linear-gradient(45deg, var(--cyan), transparent, var(--cyan));
+    z-index: -1;
+    animation: borderGlow 4s linear infinite;
+}
+@keyframes borderGlow { 0%{opacity:0.5;} 50%{opacity:1;} 100%{opacity:0.5;} }
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--cyan);
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+    padding-bottom: 10px;
+}
+
+.close-modal {
+    color: var(--text-dim);
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-modal:hover {
+    color: var(--red);
+    text-shadow: 0 0 10px var(--red);
+}
+
+.chart-img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Add this to static/style.css */
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.label-small {
+    font-size: 0.7rem;
+    color: var(--cyan);
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.cyber-select {
+    background-color: rgba(5, 10, 20, 0.8);
+    border: 1px solid var(--text-dim);
+    color: white;
+    padding: 10px;
+    font-family: var(--font);
+    font-size: 0.9rem;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cyber-select:hover, .cyber-select:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+}
+
+.cyber-select option {
+    background-color: var(--panel-bg);
+    color: white;
+}

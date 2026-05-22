@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="dashboard">
+        
+        <div class="video-section">
+            <header>
+                <div class="logo">SIGN<span class="cyan">_SENSE</span></div>
+                <div class="status">SYSTEM: <span id="statusText">STANDBY</span></div>
+            </header>
+            
+            <div class="video-container">
+                <video id="videoElement" autoplay playsinline></video>
+                <div class="scanner"></div>
+                <div id="cameraOverlay" class="overlay">
+                    <p>AWAITING INPUT</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            
+            <div class="panel-box">
+                <div class="label">DETECTED CHARACTER</div>
+                <div id="currentPrediction" class="char-display">--</div>
+            </div>
+
+            <div class="panel-box">
+                <div class="label">CONFIDENCE LEVEL</div>
+                <div class="progress-bg">
+                    <div id="confidenceBar" class="progress-fill" style="width: 0%;"></div>
+                </div>
+                <div id="confidenceText" class="conf-text">0%</div>
+            </div>
+            
+            <div class="pannel-box control-group">
+                <span class="label-small">CAMERA SOURCE</span>
+                <select id="cameraSelect" class="cyber-select">
+                    <option value="" disabled selected>Loading cameras...</option>
+                </select>
+            </div>
+            
+            <div class="panel-box bottom-controls">
+                <button id="startBtn" class="btn btn-start">INITIALIZE SYSTEM</button>
+                <button id="stopBtn" class="btn btn-stop" disabled>TERMINATE</button>
+                
+                <button id="helpBtn" class="btn btn-help">HELP</button>
+
+                <div class="toggle-row">
+                    <span>AUDIO FEED</span>
+                    <label class="switch">
+                        <input type="checkbox" id="voiceToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="helpModal" class="modal-overlay">
+        <div class="modal-content terminal-border">
+            <div class="modal-header">
+                <span>REFERENCE</span>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="{{ url_for('static', filename='sign_chart.jpg') }}" alt="Sign Language Chart" class="chart-img">
+            </div>
+        </div>
+    </div>
+    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
